@@ -1,0 +1,15 @@
+[
+  {
+    "id": "proj-split-map-01",
+    "layout": "split-map",
+    "title": "Interaktive Map",
+    "date": "2025-10-24",
+    "map": {
+      "center": [49.99, 8.27],
+      "zoom": 12,
+      "tiles": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "attribution": "&copy; OpenStreetMap contributors"
+    }
+  }
+  
+]

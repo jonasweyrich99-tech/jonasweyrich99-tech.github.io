@@ -1,0 +1,26 @@
+[
+  {
+    "id": "news-2025-10-23-mazda",
+    "title": "Mazda: Die Neuheiten für 2025 im Überblick",
+    "date": "2025-10-23",
+    "image": "assets/Mazda.png",
+    "excerpt": "Mazda stellt seine Modellflotte für 2025 vor: neue Motorvarianten, Updatedesigns und erste Hybrid-Ankündigungen — ein kompakter Überblick.",
+    "link": "https://de.motor1.com/news/742581/mazda-neue-modelle-2025-%C3%BCbersicht/"
+  },
+  {
+    "id": "news-2025-10-22-samsung",
+    "title": "Samsung zieht die Reißleine: Vier Galaxy-Modelle bekommen keine Updates mehr",
+    "date": "2025-10-22",
+    "image": "assets/Samsung.png",
+    "excerpt": "Samsung beendet die Update-Versorgung für mehrere ältere Galaxy-Modelle — betroffene Geräte, mögliche Sicherheitsfolgen und Empfehlungen für Nutzer.",
+    "link": "https://www.chip.de/news/handy/samsung-macht-schluss-diese-4-galaxy-modelle-fliegen-aus-update-zyklus_2fea8eaf-2ec5-4ee0-a4f2-fec5431350a1.html"
+  },
+  {
+    "id": "news-2025-10-21-bayern",
+    "title": "Champions League: Bayern siegen locker und feiern Rekord‑Karl",
+    "date": "2025-10-23",
+    "image": "assets/Bayern.png",
+    "excerpt": "Bayern gewinnt souverän in der Gruppenphase. Torschütze ‚Rekord‑Karl‘ sorgt für jubelnde Fans und einen neuen Vereinsrekord.",
+    "link": "https://www.bild.de/sport/fussball/champions-league-bayern-siegen-locker-und-feiern-rekord-karl-68f9234d59e2e0975070894f?t_ref=https%3A%2F%2Fm.bild.de%2Fsport%2Ffussball%2Fchampions-league-bayern-siegen-locker-und-feiern-rekord-karl-68f9234d59e2e0975070894f%3Ft_ref%3Dhttps%253A%252F%252Fwww.google.com%252F"
+  }
+]

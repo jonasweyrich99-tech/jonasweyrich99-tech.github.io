@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonas Weyrich – Persönliche Webseite</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Leaflet CSS (für eingebettete Karte) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <style>
+        /* Zusätzliche Styles für Tabs (klein, neutral) */
+        .tabs { display:flex; gap:.5rem; margin: .8rem 0 1.2rem 0; flex-wrap:wrap; }
+        .tab-button{
+            border:0; padding:.5rem .8rem; border-radius:8px; cursor:pointer;
+            background: color-mix(in srgb, var(--card) 85%, transparent);
+            color:var(--text); font-weight:600;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .tab-button[aria-selected="true"]{
+          /* dunklere Variante des Accent-Farbs */
+          background: color-mix(in srgb, var(--accent) 60%, black);
+          color: #ffffff;
+          box-shadow: 0 8px 24px color-mix(in srgb, black 40%, transparent);
+          transform: translateY(-1px);
+          border: 1px solid color-mix(in srgb, var(--accent) 40%, black);
+        }
+        .tab-panel[hidden]{ display:none; }
+        .tabs-wrap{ margin-top: .4rem; }
+        /* leichte Anpassung für Tabellen/Abstände in Panels */
+        .panel-content{ padding-top:.2rem; }
+
+        /* --- neue/angepasste Styles --- */
+        /* Hellblauer Rahmen/Hintergrund hinter dem Namen */
+        header h1{
+          display:inline-block;
+          margin:0;
+          padding:.18rem .6rem;
+          border-radius:8px;
+          background: color-mix(in srgb, var(--accent) 18%, transparent);
+          border: 2px solid color-mix(in srgb, var(--accent) 36%, transparent);
+          font-size:1.75rem;
+          letter-spacing:-0.02em;
+        }
+
+        /* About: Text links, Bild rechts */
+        .about-row{
+          display:flex;
+          gap:1.25rem;
+          align-items:flex-start;
+          margin-top:.6rem;
+          flex-wrap:wrap;
+        }
+        .about-text{
+          flex:1;
+          min-width:220px; /* verhindert zu starkes Zusammendrücken */
+        }
+
+        figure{
+          margin:0;
+          padding:0;
+          display:flex;
+          flex-direction:column;
+          gap:.4rem;
+          align-items:center;
+          width:220px; /* feste Anzeigebreite für das Bild-Panel */
+          flex:0 0 220px;
+        }
+        figure img{
+          width:220px;
+          height:auto;            /* Höhe proportional, kein Zuschneiden */
+          object-fit:contain;     /* kein Beschneiden */
+          border-radius:12px;
+          box-shadow: 0 8px 30px var(--shadow);
+          display:block;
+        }
+        .figcaption{
+          color:var(--muted);
+          font-size:.95rem;
+          text-align:center;
+          margin:0;
+        }
+
+        /* Mobile: spalten zu zeilen */
+        @media (max-width:640px){
+          .about-row{ flex-direction:column; gap:.6rem; }
+          figure{ width:160px; flex:0 0 160px; }
+          figure img{ width:160px; }
+          header h1{ font-size:1.4rem; padding:.12rem .45rem }
+        }
+
+        /* Dark-mode: ausgewählter Tab bleibt weiß; Panel bleibt dunkel mit weißem Text */
+        html[data-theme="dark"] .tab-button[aria-selected="true"]{
+          background: #ffffff;
+          color: #000000;
+          box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+          transform: none;
+        }
+        html[data-theme="dark"] .tab-button[aria-selected="true"]:focus{
+          outline: 3px solid color-mix(in srgb, #ffffff 12%, var(--accent));
+          outline-offset: 3px;
+        }
+
+        /* geändert: Panel im Darkmode dunkel lassen und Text weiß (verwendet Theme-Variablen) */
+        html[data-theme="dark"] .tab-panel:not([hidden]){
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+          color: var(--text); /* var(--text) ist im Darkmode hell/weiß */
+          border-radius: 10px;
+          padding: 1rem;
+          box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+          border: 1px solid color-mix(in srgb, var(--card) 25%, transparent);
+        }
+        /* Inhaltstext im aktiven Panel erben lassen */
+        html[data-theme="dark"] .tab-panel:not([hidden]) *{
+          color: inherit;
+        }
+
+        /* Styles für News-Liste */
+        .news-list{
+          display:flex;
+          flex-direction:column;
+          gap:1rem;
+          margin-top:.6rem;
+        }
+        .news-item{
+          display:flex;
+          gap:1rem;
+          align-items:flex-start;
+          background: color-mix(in srgb, var(--card) 90%, transparent);
+          padding:.8rem;
+          border-radius:10px;
+          box-shadow: 0 6px 18px var(--shadow);
+        }
+        .news-item img{
+          width:140px;
+          height:90px;
+          object-fit:cover;
+          border-radius:8px;
+          flex:0 0 140px;
+        }
+        .news-meta h3{ margin:0 0 .25rem 0; font-size:1.05rem }
+        .news-meta time{ color:var(--muted); font-size:.9rem; display:block; margin-bottom:.35rem }
+        .news-meta p{ margin:0 0 .5rem 0; color:var(--text) }
+        .news-meta a{ color:var(--accent); font-weight:600; text-decoration:none }
+
+        /* --- NEU: Styles für Projects (Grid) --- */
+        .project-list{
+          display:grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap:1rem;
+          margin-top:.6rem;
+        }
+
+        /* ersetzt: spezielle Split-Map Darstellung: links | map | rechts - Karte immer zentriert */
+        .project-split{
+          display:grid;
+          grid-template-columns: 220px minmax(320px, 640px) 220px; /* left | center(map) | right */
+          gap:1rem;
+          align-items:start;
+          margin-top:.6rem;
+          width:100%;
+          justify-content:center;
+        }
+
+        .project-side{
+          background: color-mix(in srgb, var(--card) 92%, transparent);
+          padding:.8rem;
+          border-radius:8px;
+          box-shadow: 0 6px 18px var(--shadow);
+          display:flex;
+          gap:.6rem;
+          align-items:flex-start;
+          min-height:120px;
+        }
+
+        .project-map{
+          border-radius:8px;
+          overflow:hidden;
+          box-shadow: 0 6px 18px var(--shadow);
+          background: color-mix(in srgb, var(--card) 94%, transparent);
+          width:100%;
+          max-width:640px;
+          display:flex;
+          align-items:stretch;
+          justify-content:stretch;
+        }
+        /* explizite Mindesthöhe + responsive Anpassung */
+        .project-map .map-instance{ width:100%; height:360px; min-height:200px; display:block }
+        @media (max-width:900px){
+          .project-split{ grid-template-columns: 1fr; }
+          .project-map .map-instance{ height:260px }
+        }
+
+        /* Fixed contact-Icons rechts unten */
+        .contact-fixed {
+          position: fixed;
+          right: 18px;
+          bottom: 18px;
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+          padding: 0.4rem 0.55rem;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--card) 86%, transparent);
+          box-shadow: 0 8px 24px var(--shadow);
+          backdrop-filter: blur(6px);
+          z-index: 1200;
+        }
+        .contact-fixed a{
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          overflow: hidden;
+          background: transparent;
+          border: 1px solid color-mix(in srgb, var(--card) 18%, transparent);
+        }
+        .contact-fixed img{
+          width: 24px;
+          height: 24px;
+          object-fit: contain;
+          display: block;
+        }
+
+        /* Darkmode: leichte Anpassung, damit Icons gut lesbar bleiben */
+        html[data-theme="dark"] .contact-fixed{
+          background: color-mix(in srgb, #ffffff 8%, transparent);
+        }
+        html[data-theme="dark"] .contact-fixed img{
+          filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+        }
+
+        /* Mobile tweaks */
+        @media (max-width:640px){
+          .contact-fixed{ right:12px; bottom:12px; padding: .3rem; gap:.4rem }
+          .contact-fixed a{ width:32px; height:32px }
+          .contact-fixed img{ width:20px; height:20px }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Jonas Weyrich</h1>
+            <div style="display:flex; gap:.6rem; align-items:center;">
+                <div style="flex:1; min-width:0;">
+                    <!-- Absatz entfernt; wird in "Über mich" eingefügt -->
+                </div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Wechseln zwischen Hell- und Dunkelmodus" title="Design wechseln">🌙</button>
+            </div>
+        </header>
+
+        <!-- Tabs Navigation -->
+        <nav class="tabs-wrap" aria-label="Seitennavigation">
+            <div class="tabs" role="tablist" aria-label="Bereiche">
+                <button class="tab-button" role="tab" id="tab-about" aria-controls="panel-about" aria-selected="true">About</button>
+                <button class="tab-button" role="tab" id="tab-news" aria-controls="panel-news" aria-selected="false">News</button>
+                <button class="tab-button" role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="false">Projects</button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- About -->
+            <section id="panel-about" class="tab-panel" role="tabpanel" aria-labelledby="tab-about">
+                <div class="panel-content">
+                    <section>
+                        <h2>Über mich</h2>
+
+                        <!-- geändert: Text links, Bild rechts -->
+                        <div class="about-row">
+                            <div class="about-text">
+                                <p>Hallo! Ich bin Jonas Weyrich, Student an der Hochschule Mainz (Geoinformatik & Vermessung).</p>
+                                <p>Ich interessiere mich für Webentwicklung, Geodaten und innovative Technologien, die unsere Welt smarter machen. In meiner Freizeit spiele ich Tischtennis und gehe gerne spazieren.</p>
+                                <p>Im Studium der Geoinformatik und Vermessung an der Hochschule Mainz – das ich in Kooperation mit dem Landesamt für Vermessung und Geobasisinformation absolviere – habe ich viele spannende Einblicke in den Bereich der Geodäsie bekommen. Besonders interessant fand ich die Arbeit mit klassischen Vermessungsmethoden wie Tachymetrie und Nivellement, aber auch moderne Ansätze wie Drohnenvermessung und Photogrammetrie. Zu letzterem Thema habe ich im 3. Semester eine Präsentation zum Einsatz in der Archäologie gehalten – ein Bereich, der mich bis heute fasziniert. </p>
+                            </div>
+
+                            <figure>
+                                <img src="assets/ich.jpg" alt="Porträt von Jonas Weyrich">
+                                <figcaption class="figcaption">Jonas Weyrich – Geoinformatik-Student und Technik-Enthusiast</figcaption>
+                            </figure>
+                        </div>
+
+                    </section>
+
+                    <section>
+                        <h2>Kurz-CV</h2>
+                        <table aria-label="Lebenslauf von Jonas Weyrich">
+                            <thead>
+                                <tr>
+                                    <th>Jahr</th>
+                                    <th>Station</th>
+                                    <th>Ort</th>
+                                    <th>Stichwort</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>2023–2026</td><td>Studium Geoinformatik</td><td>Mainz</td><td>Bachelor</td></tr>
+                                <tr><td>2014–2021</td><td>Schule</td><td>Kusel</td><td>Abitur (Siebenpfeifergymnasium)</td></tr>
+                                <tr><td>2010-2014</td><td>Schule</td><td>Herschweiler-Pettersheim</td><td>Grundschule</td></tr>
+                                <tr><td>2010–heute</td><td>Tischtennis</td><td>Herschweiler-Pettersheim</td><td>Sport & Verein</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </section>
+
+            <!-- News -->
+            <section id="panel-news" class="tab-panel" role="tabpanel" aria-labelledby="tab-news" hidden>
+                <div class="panel-content">
+                    <h2>News</h2>
+
+                    <!-- Hier werden die News dynamisch eingefügt -->
+                    <div id="news-list" class="news-list" aria-live="polite">
+                        <p>Lade News…</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects: Platzhalter, wird vom Script befüllt -->
+            <section id="panel-projects" class="tab-panel" role="tabpanel" aria-labelledby="tab-projects" hidden>
+              <div class="panel-content">
+                <h2>Projects</h2>
+                <div id="project-list" class="project-list" aria-live="polite">
+                  <p>Lade Projekte…</p>
+                </div>
+              </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>© 2024 Jonas Weyrich</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab-Logik: merkt die Auswahl in localStorage, einfache Tastaturnavigation (Links/Rechts)
+        (function(){
+            const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+            const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+            const storageKey = 'activeTab';
+            function showTab(id){
+                tabs.forEach(t => {
+                    const sel = (t.id === id);
+                    t.setAttribute('aria-selected', sel ? 'true' : 'false');
+                });
+                panels.forEach(p => {
+                    p.hidden = p.id !== id.replace('tab-','panel-') && p.id !== id.replace('tab-','panel-') ? p.id !== id.replace('tab-','panel-') : false;
+                });
+                // Ensure correct panel visibility mapping
+                panels.forEach(p => p.hidden = !(p.id === id.replace('tab-','panel-')));
+                localStorage.setItem(storageKey, id);
+                // focus the active tab for accessibility
+                document.getElementById(id).focus();
+            }
+
+            // Init
+            const saved = localStorage.getItem(storageKey);
+            const initial = saved && document.getElementById(saved) ? saved : 'tab-about';
+            showTab(initial);
+
+            // Click handlers
+            tabs.forEach(t => {
+                t.addEventListener('click', () => showTab(t.id));
+                t.addEventListener('keydown', (e) => {
+                    const idx = tabs.indexOf(t);
+                    if(e.key === 'ArrowRight') { tabs[(idx+1) % tabs.length].click(); }
+                    if(e.key === 'ArrowLeft')  { tabs[(idx-1 + tabs.length) % tabs.length].click(); }
+                });
+            });
+        })();
+    </script>
+
+    <script>
+        // Minimaler Theme-Switcher: merkt die Wahl in localStorage und respektiert prefers-color-scheme
+        (function () {
+            const btn = document.getElementById('theme-toggle');
+            const stored = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initial = stored || (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', initial);
+            btn.textContent = initial === 'dark' ? '☀️' : '🌙';
+            btn.setAttribute('aria-pressed', initial === 'dark');
+
+            btn.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                btn.textContent = next === 'dark' ? '☀️' : '🌙';
+                btn.setAttribute('aria-pressed', next === 'dark');
+            });
+        })();
+    </script>
+
+    <!-- News loader: lädt assets/news.json und rendert Artikel -->
+    <script>
+    (function(){
+      const list = document.getElementById('news-list');
+      if(!list) return;
+
+      function renderDate(iso){
+        try{
+          return new Date(iso).toLocaleDateString('de-DE', { day:'2-digit', month:'short', year:'numeric' });
+        }catch(e){ return iso; }
+      }
+
+      function isExternal(url){
+        return /^https?:\/\//i.test(url);
+      }
+
+      fetch('assets/news.json', { cache: 'no-store' })
+        .then(res => {
+          if(!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(items => {
+          if(!Array.isArray(items) || items.length === 0){
+            list.innerHTML = '<p>Keine News vorhanden.</p>';
+            return;
+          }
+          // neueste zuerst
+          items.sort((a,b) => new Date(b.date) - new Date(a.date));
+          list.innerHTML = '';
+          items.forEach(item => {
+            const article = document.createElement('article');
+            article.className = 'news-item';
+
+            const img = document.createElement('img');
+            img.loading = 'lazy';
+            img.alt = item.title || '';
+            img.src = item.image || 'assets/placeholder.png';
+
+            // Bild klickbar wenn Link vorhanden
+            if(item.link){
+              const il = document.createElement('a');
+              il.href = item.link;
+              if(isExternal(item.link)){ il.target = '_blank'; il.rel = 'noopener noreferrer'; }
+              il.appendChild(img);
+              article.appendChild(il);
+            } else {
+              article.appendChild(img);
+            }
+
+            const meta = document.createElement('div');
+            meta.className = 'news-meta';
+
+            const h3 = document.createElement('h3');
+            if(item.link){
+              const tl = document.createElement('a');
+              tl.textContent = item.title || 'Ohne Titel';
+              tl.href = item.link;
+              if(isExternal(item.link)){ tl.target = '_blank'; tl.rel = 'noopener noreferrer'; }
+              tl.style.color = 'inherit';
+              tl.style.textDecoration = 'none';
+              h3.appendChild(tl);
+            } else {
+              h3.textContent = item.title || 'Ohne Titel';
+            }
+            meta.appendChild(h3);
+
+            if(item.date){
+              const time = document.createElement('time');
+              time.dateTime = item.date;
+              time.textContent = renderDate(item.date);
+              meta.appendChild(time);
+            }
+
+            const p = document.createElement('p');
+            p.textContent = item.excerpt || '';
+            meta.appendChild(p);
+
+            if(item.link){
+              const a = document.createElement('a');
+              a.href = item.link;
+              a.textContent = 'Weiterlesen';
+              if(isExternal(item.link)){ a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+              meta.appendChild(a);
+            }
+
+            article.appendChild(meta);
+            list.appendChild(article);
+          });
+        })
+        .catch(err => {
+          console.error('News: ', err);
+          list.innerHTML = '<p>Fehler beim Laden der News.</p>';
+        });
+    })();
+    </script>
+
+    <!-- Leaflet JS (wird vor dem Projects-Loader benötigt) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<!-- Projects loader: rendert immer drei Kästen (links | mitte: Karte | rechts) -->
+<script>
+(function(){
+  const container = document.getElementById('project-list');
+  if(!container) return;
+
+  let projectData = null;
+  const mapInstances = {};
+
+  function createSideBox(linkData, defaultTitle){
+    const box = document.createElement('div');
+    box.className = 'project-side';
+
+    if(linkData && linkData.url){
+      const thumb = linkData.thumbnail || 'assets/placeholder.png';
+      box.innerHTML = `
+        <img src="${thumb}" alt="${(linkData.title||'')}" />
+        <div class="side-meta">
+          <h4><a href="${linkData.url}" target="_blank" rel="noopener noreferrer">${linkData.title || defaultTitle}</a></h4>
+          <small>${linkData.subtitle || ''}</small>
+        </div>
+      `;
+    } else {
+      // Spezieller Inhalt für den linken Kasten (Hochschule Mainz)
+      if(defaultTitle === 'Links'){
+        box.innerHTML = `
+          <div style="width:100%">
+            <h4 style="margin:0; font-weight:700; font-size:1.05rem">Hochschule Mainz</h4>
+            <p style="margin:.4rem 0 0 0; line-height:1.2;">
+              Adresse: Lucy-Hillebrand-Str. 2<br>
+              Postleitzahl: 55128<br>
+              Telefonnummer: 06131 6280
+            </p>
+          </div>
+        `;
+      }
+      // Rechter Kasten: nur das JPG-Bild der Hochschule anzeigen
+      else if(defaultTitle === 'Rechts'){
+        box.innerHTML = `
+          <div style="width:100%; display:flex; align-items:center; justify-content:center;">
+            <img src="assets/HS Mainz.jpg" alt="Hochschule Mainz" style="width:100%; height:auto; border-radius:6px; object-fit:cover; display:block;" />
+          </div>
+        `;
+      } else {
+        box.innerHTML = `
+          <div style="width:100%">
+            <h4>${defaultTitle}</h4>
+            <small style="color:var(--muted)">Platz für Beschreibung oder Link</small>
+          </div>
+        `;
+      }
+    }
+    return box;
+  }
+
+  function renderSplitMap(it){
+    container.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'project-item project-split';
+
+    // left (immer sichtbar, ggf. Platzhalter)
+    const leftBox = createSideBox(it.leftLink, 'Links');
+    // center: Karte
+    const centerWrap = document.createElement('div');
+    centerWrap.className = 'project-map';
+    const mapDiv = document.createElement('div');
+    mapDiv.className = 'map-instance';
+    const mapId = 'map-' + it.id;
+    mapDiv.id = mapId;
+    centerWrap.appendChild(mapDiv);
+
+    // right (immer sichtbar, ggf. Platzhalter)
+    const rightBox = createSideBox(it.rightLink, 'Rechts');
+
+    wrap.appendChild(leftBox);
+    wrap.appendChild(centerWrap);
+    wrap.appendChild(rightBox);
+
+    container.appendChild(wrap);
+    return mapId;
+  }
+
+  function initMapIfNeeded(it){
+    if(!it) return null;
+    const mapId = 'map-' + it.id;
+    if(mapInstances[mapId]) return mapInstances[mapId];
+    if(!window.L) { console.error('Leaflet nicht verfügbar'); return null; }
+
+    const center = (it.map && Array.isArray(it.map.center)) ? it.map.center : [49.99,8.27];
+    const zoom = (it.map && it.map.zoom) ? it.map.zoom : 12;
+    const tiles = it.map?.tiles || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const attribution = it.map?.attribution || '&copy; OpenStreetMap contributors';
+
+    try{
+      const map = L.map(mapId, { center, zoom, scrollWheelZoom: false });
+      L.tileLayer(tiles, { attribution }).addTo(map);
+
+      // --- NEU: Pinnadel (Marker) bei 49.9892 N, 8.2383 E hinzufügen ---
+      const pinCoords = [49.9892, 8.2383];
+      const marker = L.marker(pinCoords).addTo(map);
+      marker.bindPopup('<strong>Projekt-Pin</strong><br>49.9892° N, 8.2383° E');
+
+      // stelle sicher, dass Leaflet die korrekte Größe hat
+      setTimeout(() => map.invalidateSize(), 250);
+      mapInstances[mapId] = map;
+      return map;
+    }catch(e){
+      console.error('Fehler beim Erstellen der Karte', e);
+      return null;
+    }
+  }
+
+  function refreshMaps(){
+    Object.values(mapInstances).forEach(m => {
+      try{ if(m && typeof m.invalidateSize === 'function') m.invalidateSize(); }catch(e){}
+    });
+  }
+  window.addEventListener('resize', () => setTimeout(refreshMaps, 120));
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) setTimeout(refreshMaps, 120); });
+
+  // lade JSON
+  fetch('assets/projects.json', { cache: 'no-store' })
+    .then(r => { if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(items => {
+      if(!Array.isArray(items) || items.length === 0){ container.innerHTML = '<p>Keine Projekte.</p>'; return; }
+      projectData = items[0]; // nur erstes Projekt anzeigen
+      if(projectData.layout === 'split-map'){
+        const mapId = renderSplitMap(projectData);
+        // falls Tab bereits aktiv ist: Karte sofort initialisieren
+        const activeTab = document.querySelector('[role="tab"][aria-selected="true"]');
+        if(activeTab && activeTab.id === 'tab-projects'){
+          initMapIfNeeded(projectData);
+        }
+      } else {
+        container.innerHTML = '<p>Kein Split-Map-Projekt gefunden.</p>';
+      }
+    })
+    .catch(err => {
+      console.error('Projects load error', err);
+      container.innerHTML = '<p>Fehler beim Laden der Projekte. Prüfe assets/projects.json und ob die Seite über http(s) läuft.</p>';
+    });
+
+  // init beim Tab-Wechsel
+  document.getElementById('tab-projects').addEventListener('click', () => {
+    if(!projectData) return;
+    setTimeout(() => {
+      const map = initMapIfNeeded(projectData);
+      if(map) setTimeout(() => map.invalidateSize(), 200);
+    }, 120);
+  });
+
+  // falls Seite mit Projects aktiv geladen wird
+  window.addEventListener('load', () => {
+    const active = localStorage.getItem('activeTab');
+    if(active === 'tab-projects' && projectData){
+      setTimeout(() => initMapIfNeeded(projectData), 300);
+    }
+  });
+})();
+</script>
+</body>
+</html>
