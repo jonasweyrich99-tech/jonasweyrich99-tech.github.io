@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Gelände Deutschland 3D (Cesium)</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.130/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.130/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style>
+    html, body, #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <script>
+    // Initialisieren des Cesium-Viewers
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      shadows: false,
+      geocoder: false,
+      baseLayerPicker: false
+    });
+
+    // Hintergrundkarte für Gebiete außerhalb von Deutschland (OpenStreetMap)
+    const osm = new Cesium.OpenStreetMapImageryProvider({
+      url: 'https://a.tile.openstreetmap.org/',
+      credit: new Cesium.Credit(
+        '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+        true
+      )
+    });
+    viewer.imageryLayers.addImageryProvider(osm);
+
+    // Hintergrundkarte: WMS der SmartMapping Karte (basemap.de)
+    const provider = new Cesium.WebMapServiceImageryProvider({
+      url: 'https://sgx.geodatenzentrum.de/wms_basemapde',
+      layers: "de_basemapde_web_raster_farbe",
+      parameters: {
+        transparent: true,
+        format: "image/png"
+      }
+    });
+    viewer.imageryLayers.addImageryProvider(provider);
+
+    // Kamera auf Punkt zentrieren
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(10.45, 51.16, 2500000) // Mitte Deutschland, 2500 km Höhe
+    });
+
+    // Gelände ergänzen
+    viewer.terrainProvider = Cesium.createWorldTerrain(); // Standard-Gelände für die ganze Welt
+
+    async function startup(Cesium) {
+      'use strict';
+      try {
+        // Deutschland-Gelände als zusätzlicher Layer
+        const terr = await Cesium.CesiumTerrainProvider.fromUrl(
+          "https://sgx.geodatenzentrum.de/gdz_basemapde_3d_gelaende/dgm5_4326_mesh/"
+        );
+        viewer.scene.terrainProvider = terr; // Nur für Deutschland, Rest bleibt WorldTerrain
+      } catch (error) {
+        console.error(`Error creating tileset: ${error}`);
+      }
+    }
+
+    // Beim Aufruf der Anwendung das Gelände laden
+    if (typeof Cesium !== 'undefined') {
+      startup(Cesium).catch((error) => {
+        "use strict";
+        console.error(error);
+      });
+    }
+  </script>
+</body>
+</html>
