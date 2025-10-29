@@ -373,6 +373,12 @@
                   <iframe class="maps-iframe" src="maps/map_4_basiskarte.html" title="Map 4 – Weltkarte" loading="lazy"></iframe>
                 </div>
 
+                <!-- NEU: Cesium 3D-Gebäude Deutschland -->
+                <div class="maps-iframe-wrap" aria-hidden="false">
+                  <h3>5. Deutschland 3D-Gebäude (Cesium)</h3>
+                  <div id="cesiumContainer" style="width:100%; height:70vh; min-height:360px; border-radius:8px; box-shadow:0 8px 24px #0002;"></div>
+                </div>
+
                 <p style="margin-top:.4rem; font-size:.95rem; color:var(--muted)">
                  
                 </p>
@@ -717,6 +723,58 @@
     }
   });
 })();
+</script>
+
+<!-- CesiumJS einbinden und 3D-Gebäude-Layer laden -->
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Nur initialisieren, wenn das Maps-Panel sichtbar ist
+  function initCesiumIfVisible() {
+    const mapsPanel = document.getElementById('panel-maps');
+    const cesiumDiv = document.getElementById('cesiumContainer');
+    if (!mapsPanel || !cesiumDiv || mapsPanel.hidden) return;
+    if (cesiumDiv.dataset.initialized) return; // nur einmal initialisieren
+
+    // Cesium Viewer
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      timeline: false,
+      animation: false,
+      baseLayerPicker: true,
+      geocoder: false,
+      homeButton: true,
+      sceneModePicker: true,
+      navigationHelpButton: false,
+      infoBox: false,
+      selectionIndicator: false,
+      shouldAnimate: false,
+      terrainProvider: Cesium.createWorldTerrain()
+    });
+
+    // 3D-Gebäude-Layer von basemap.de (3D-Gebäude Deutschland)
+    viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
+      url: "https://tiles.basemap.de/3d/tileset.json"
+    }));
+
+    // Deutschland-Zoom
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(10.45, 51.16, 2500000)
+    });
+
+    cesiumDiv.dataset.initialized = "1";
+  }
+
+  // Beim Tab-Wechsel initialisieren
+  document.getElementById('tab-maps').addEventListener('click', function() {
+    setTimeout(initCesiumIfVisible, 200);
+  });
+
+  // Falls Seite mit Maps-Tab geladen wird
+  if (localStorage.getItem('activeTab') === 'tab-maps') {
+    setTimeout(initCesiumIfVisible, 400);
+  }
+});
 </script>
 </body>
 </html>
