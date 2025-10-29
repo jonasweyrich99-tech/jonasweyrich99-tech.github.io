@@ -190,6 +190,26 @@
           .project-map .map-instance{ height:260px }
         }
 
+        /* Responsive iframe für eingebettete Folium-Maps */
+        .maps-panel { display:flex; flex-direction:column; gap:0.6rem; }
+        .maps-iframe-wrap{
+          width:100%;
+          border-radius:8px;
+          overflow:hidden;
+          box-shadow: 0 8px 24px var(--shadow);
+          background: color-mix(in srgb, var(--card) 94%, transparent);
+        }
+        .maps-iframe{
+          width:100%;
+          height:70vh; /* hohe Ansicht, passt sich an */
+          min-height:360px;
+          border:0;
+          display:block;
+        }
+        @media (max-width:900px){
+          .maps-iframe{ height:50vh; min-height:220px }
+        }
+
         /* Fixed contact-Icons rechts unten */
         .contact-fixed {
           position: fixed;
@@ -257,6 +277,8 @@
                 <button class="tab-button" role="tab" id="tab-about" aria-controls="panel-about" aria-selected="true">About</button>
                 <button class="tab-button" role="tab" id="tab-news" aria-controls="panel-news" aria-selected="false">News</button>
                 <button class="tab-button" role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="false">Projects</button>
+                <!-- NEU: Maps-Tab -->
+                <button class="tab-button" role="tab" id="tab-maps" aria-controls="panel-maps" aria-selected="false">Maps</button>
             </div>
         </nav>
 
@@ -324,6 +346,36 @@
                 <div id="project-list" class="project-list" aria-live="polite">
                   <p>Lade Projekte…</p>
                 </div>
+              </div>
+            </section>
+
+            <!-- NEU: Maps Panel -->
+            <section id="panel-maps" class="tab-panel" role="tabpanel" aria-labelledby="tab-maps" hidden>
+              <div class="panel-content maps-panel">
+                <h2>Maps</h2>
+                <div class="maps-iframe-wrap" aria-hidden="false">
+                  <h3>1. Basiskarte Europa</h3>
+                  <iframe class="maps-iframe" src="maps/map_1_basiskarte.html" title="Map 1 – Basiskarte" loading="lazy"></iframe>
+                </div>
+
+                <div class="maps-iframe-wrap" aria-hidden="false">
+                  <h3>2. Marker in Europa</h3>
+                  <iframe class="maps-iframe" src="maps/map_2_basiskarte.html" title="Map 2 – Marker" loading="lazy"></iframe>
+                </div>
+
+                <div class="maps-iframe-wrap" aria-hidden="false">
+                  <h3>3. Reiseroute</h3>
+                  <iframe class="maps-iframe" src="maps/map_3_basiskarte.html" title="Map 3 – Reiseroute" loading="lazy"></iframe>
+                </div>
+
+                <div class="maps-iframe-wrap" aria-hidden="false">
+                  <h3>4. Weltkarte mit besuchten Ländern</h3>
+                  <iframe class="maps-iframe" src="maps/map_4_basiskarte.html" title="Map 4 – Weltkarte" loading="lazy"></iframe>
+                </div>
+
+                <p style="margin-top:.4rem; font-size:.95rem; color:var(--muted)">
+                 
+                </p>
               </div>
             </section>
 
