@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f17a81e7f1dac126bf65151bb38eea24 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_f17a81e7f1dac126bf65151bb38eea24" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_f17a81e7f1dac126bf65151bb38eea24 = L.map(
+                "map_f17a81e7f1dac126bf65151bb38eea24",
+                {
+                    center: [48.5, 8.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_4cae33d732a50bdd7b6bf37dcf8638a8 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_4cae33d732a50bdd7b6bf37dcf8638a8.addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var tile_layer_e4787d6177bbbe1d1e85806aeb0769b0 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_e4787d6177bbbe1d1e85806aeb0769b0.addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var poly_line_874f36fbb51d523a3b27ef7a17af2141 = L.polyline(
+                [[49.4757, 7.3504], [48.584614, 7.7507127], [47.5581077, 7.5878261], [47.0505452, 8.3054682], [45.4641943, 9.1896346], [45.52819061279297, 10.547916412353516]],
+                {"bubblingMouseEvents": true, "color": "#2b6cb0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2b6cb0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var marker_50bdb406d4b6557716f50e2c3c97f294 = L.marker(
+                [49.4757, 7.3504],
+                {
+}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var div_icon_a868e7bea9d7c5da20c8d516cb82b3a2 = L.divIcon({
+  "html": "\n      \u003cdiv style=\"\n        display:inline-flex;\n        align-items:center;\n        justify-content:center;\n        width:30px;\n        height:30px;\n        background:#2b6cb0;\n        color:#fff;\n        border-radius:50%;\n        font-weight:700;\n        box-shadow:0 1px 3px rgba(0,0,0,0.35);\n        font-size:14px;\n      \"\u003e1\u003c/div\u003e\n    ",
+  "className": "empty",
+});
+        
+    
+        var popup_b2e4b7b29fa7029c3b633f3a63ad9a8b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4ccd2dd1101a17fe34639c131757635f = $(`<div id="html_4ccd2dd1101a17fe34639c131757635f" style="width: 100.0%; height: 100.0%;"><b>1. Herschweiler-Petttersheim</b><br>Koordinaten: 49.4757, 7.3504</div>`)[0];
+                popup_b2e4b7b29fa7029c3b633f3a63ad9a8b.setContent(html_4ccd2dd1101a17fe34639c131757635f);
+            
+        
+
+        marker_50bdb406d4b6557716f50e2c3c97f294.bindPopup(popup_b2e4b7b29fa7029c3b633f3a63ad9a8b)
+        ;
+
+        
+    
+    
+            marker_50bdb406d4b6557716f50e2c3c97f294.bindTooltip(
+                `<div>
+                     1. Herschweiler-Petttersheim
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_50bdb406d4b6557716f50e2c3c97f294.setIcon(div_icon_a868e7bea9d7c5da20c8d516cb82b3a2);
+            
+    
+            var marker_7bae97a33e46ddf379dfb09cf7359f25 = L.marker(
+                [48.584614, 7.7507127],
+                {
+}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var div_icon_79f53df27811028e639a55a241ca82a7 = L.divIcon({
+  "html": "\n      \u003cdiv style=\"\n        display:inline-flex;\n        align-items:center;\n        justify-content:center;\n        width:30px;\n        height:30px;\n        background:#2b6cb0;\n        color:#fff;\n        border-radius:50%;\n        font-weight:700;\n        box-shadow:0 1px 3px rgba(0,0,0,0.35);\n        font-size:14px;\n      \"\u003e2\u003c/div\u003e\n    ",
+  "className": "empty",
+});
+        
+    
+        var popup_fc5e5f35782666e7d516a35123b9c695 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_51267f60efa653d6669d17fead840f50 = $(`<div id="html_51267f60efa653d6669d17fead840f50" style="width: 100.0%; height: 100.0%;"><b>2. Straßburg</b><br>Koordinaten: 48.584614, 7.7507127</div>`)[0];
+                popup_fc5e5f35782666e7d516a35123b9c695.setContent(html_51267f60efa653d6669d17fead840f50);
+            
+        
+
+        marker_7bae97a33e46ddf379dfb09cf7359f25.bindPopup(popup_fc5e5f35782666e7d516a35123b9c695)
+        ;
+
+        
+    
+    
+            marker_7bae97a33e46ddf379dfb09cf7359f25.bindTooltip(
+                `<div>
+                     2. Straßburg
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_7bae97a33e46ddf379dfb09cf7359f25.setIcon(div_icon_79f53df27811028e639a55a241ca82a7);
+            
+    
+            var marker_196ed0778623b39454d27c3f50e87b44 = L.marker(
+                [47.5581077, 7.5878261],
+                {
+}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var div_icon_4653e9f1a61963ed7f1c0d4dffa957a7 = L.divIcon({
+  "html": "\n      \u003cdiv style=\"\n        display:inline-flex;\n        align-items:center;\n        justify-content:center;\n        width:30px;\n        height:30px;\n        background:#2b6cb0;\n        color:#fff;\n        border-radius:50%;\n        font-weight:700;\n        box-shadow:0 1px 3px rgba(0,0,0,0.35);\n        font-size:14px;\n      \"\u003e3\u003c/div\u003e\n    ",
+  "className": "empty",
+});
+        
+    
+        var popup_a408eed75feaaaf8df5964edd1aa9dbe = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5564c6da31a7b008b13dbec24e09eef4 = $(`<div id="html_5564c6da31a7b008b13dbec24e09eef4" style="width: 100.0%; height: 100.0%;"><b>3. Basel</b><br>Koordinaten: 47.5581077, 7.5878261</div>`)[0];
+                popup_a408eed75feaaaf8df5964edd1aa9dbe.setContent(html_5564c6da31a7b008b13dbec24e09eef4);
+            
+        
+
+        marker_196ed0778623b39454d27c3f50e87b44.bindPopup(popup_a408eed75feaaaf8df5964edd1aa9dbe)
+        ;
+
+        
+    
+    
+            marker_196ed0778623b39454d27c3f50e87b44.bindTooltip(
+                `<div>
+                     3. Basel
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_196ed0778623b39454d27c3f50e87b44.setIcon(div_icon_4653e9f1a61963ed7f1c0d4dffa957a7);
+            
+    
+            var marker_36ca74a1f8990e5ec37c096b55373648 = L.marker(
+                [47.0505452, 8.3054682],
+                {
+}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var div_icon_a3fe7e853e76d141eb70c4e882e54fab = L.divIcon({
+  "html": "\n      \u003cdiv style=\"\n        display:inline-flex;\n        align-items:center;\n        justify-content:center;\n        width:30px;\n        height:30px;\n        background:#2b6cb0;\n        color:#fff;\n        border-radius:50%;\n        font-weight:700;\n        box-shadow:0 1px 3px rgba(0,0,0,0.35);\n        font-size:14px;\n      \"\u003e4\u003c/div\u003e\n    ",
+  "className": "empty",
+});
+        
+    
+        var popup_f4db0f35352fd3c22640858f72b3ff70 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7c5587abeae98d80284f7d6414fd556d = $(`<div id="html_7c5587abeae98d80284f7d6414fd556d" style="width: 100.0%; height: 100.0%;"><b>4. Luzern</b><br>Koordinaten: 47.0505452, 8.3054682</div>`)[0];
+                popup_f4db0f35352fd3c22640858f72b3ff70.setContent(html_7c5587abeae98d80284f7d6414fd556d);
+            
+        
+
+        marker_36ca74a1f8990e5ec37c096b55373648.bindPopup(popup_f4db0f35352fd3c22640858f72b3ff70)
+        ;
+
+        
+    
+    
+            marker_36ca74a1f8990e5ec37c096b55373648.bindTooltip(
+                `<div>
+                     4. Luzern
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_36ca74a1f8990e5ec37c096b55373648.setIcon(div_icon_a3fe7e853e76d141eb70c4e882e54fab);
+            
+    
+            var marker_de3693057bd784066be1b6753e493f8c = L.marker(
+                [45.4641943, 9.1896346],
+                {
+}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var div_icon_a8b9917727cdbcdac5c9d6a4f581adc8 = L.divIcon({
+  "html": "\n      \u003cdiv style=\"\n        display:inline-flex;\n        align-items:center;\n        justify-content:center;\n        width:30px;\n        height:30px;\n        background:#2b6cb0;\n        color:#fff;\n        border-radius:50%;\n        font-weight:700;\n        box-shadow:0 1px 3px rgba(0,0,0,0.35);\n        font-size:14px;\n      \"\u003e5\u003c/div\u003e\n    ",
+  "className": "empty",
+});
+        
+    
+        var popup_70f08fe2fb1c5541ea633c134b7b749e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2671a87839c61f3cf9e2f2c77bfac675 = $(`<div id="html_2671a87839c61f3cf9e2f2c77bfac675" style="width: 100.0%; height: 100.0%;"><b>5. Mailand</b><br>Koordinaten: 45.4641943, 9.1896346</div>`)[0];
+                popup_70f08fe2fb1c5541ea633c134b7b749e.setContent(html_2671a87839c61f3cf9e2f2c77bfac675);
+            
+        
+
+        marker_de3693057bd784066be1b6753e493f8c.bindPopup(popup_70f08fe2fb1c5541ea633c134b7b749e)
+        ;
+
+        
+    
+    
+            marker_de3693057bd784066be1b6753e493f8c.bindTooltip(
+                `<div>
+                     5. Mailand
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_de3693057bd784066be1b6753e493f8c.setIcon(div_icon_a8b9917727cdbcdac5c9d6a4f581adc8);
+            
+    
+            var marker_2392c5a6af05063eed68c83891d2547f = L.marker(
+                [45.52819061279297, 10.547916412353516],
+                {
+}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+        
+    
+            var div_icon_da958d85d2314066b244d27d09d72f3c = L.divIcon({
+  "html": "\n      \u003cdiv style=\"\n        display:inline-flex;\n        align-items:center;\n        justify-content:center;\n        width:30px;\n        height:30px;\n        background:#2b6cb0;\n        color:#fff;\n        border-radius:50%;\n        font-weight:700;\n        box-shadow:0 1px 3px rgba(0,0,0,0.35);\n        font-size:14px;\n      \"\u003e6\u003c/div\u003e\n    ",
+  "className": "empty",
+});
+        
+    
+        var popup_2d7f5909d219086502f9bae5fa1a8f00 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d96d46130f1a3f63880746ef11965283 = $(`<div id="html_d96d46130f1a3f63880746ef11965283" style="width: 100.0%; height: 100.0%;"><b>6. Via San Sivino 11</b><br>Koordinaten: 45.52819061279297, 10.547916412353516</div>`)[0];
+                popup_2d7f5909d219086502f9bae5fa1a8f00.setContent(html_d96d46130f1a3f63880746ef11965283);
+            
+        
+
+        marker_2392c5a6af05063eed68c83891d2547f.bindPopup(popup_2d7f5909d219086502f9bae5fa1a8f00)
+        ;
+
+        
+    
+    
+            marker_2392c5a6af05063eed68c83891d2547f.bindTooltip(
+                `<div>
+                     6. Via San Sivino 11
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2392c5a6af05063eed68c83891d2547f.setIcon(div_icon_da958d85d2314066b244d27d09d72f3c);
+            
+    
+            map_f17a81e7f1dac126bf65151bb38eea24.fitBounds(
+                [[49.4757, 7.3504], [48.584614, 7.7507127], [47.5581077, 7.5878261], [47.0505452, 8.3054682], [45.4641943, 9.1896346], [45.52819061279297, 10.547916412353516]],
+                {"padding": [30, 30]}
+            );
+        
+    
+            var layer_control_2eabc3a577a22931566cd125dda37945_layers = {
+                base_layers : {
+                    "Carto Light" : tile_layer_4cae33d732a50bdd7b6bf37dcf8638a8,
+                    "OpenStreetMap" : tile_layer_e4787d6177bbbe1d1e85806aeb0769b0,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_2eabc3a577a22931566cd125dda37945 = L.control.layers(
+                layer_control_2eabc3a577a22931566cd125dda37945_layers.base_layers,
+                layer_control_2eabc3a577a22931566cd125dda37945_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_f17a81e7f1dac126bf65151bb38eea24);
+
+        
+</script>
+</html>
